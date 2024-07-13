@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+</head>
+
+<body>
+    <h1>Short Polling</h1>
+    <div id="container-data"></div>
+</body>
+<script>
+    const containerData = document.getElementById("container-data")
+    async function getData() {
+        const data = await fetch("http://localhost:3001/getData");
+        const jsonData = await data.json();
+        console.log(jsonData);
+        containerData.innerHTML = jsonData.data
+    }
+    getData();
+    const interval = setInterval(() => {
+        getData();
+    }, 3000)
+    // NOTE clear the inteval once the page navigates to other page / goes to different component
+    // for optimizing the app performance
+</script>
+
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE data</title>
+</head>
+
+<body>
+    <h1>Server sent event</h1>
+    <ul id="sse-data"></ul>
+    <script>
+        const evtSource = new EventSource("/sse");
+        console.log(evtSource)
+        const eventList = document.getElementById("sse-data");
+        evtSource.onmessage = (e) => {
+            console.log(e);
+            const newElement = document.createElement("li");
+            newElement.textContent = `message: ${e.data}`;
+            eventList.appendChild(newElement);
+        }
+        evtSource.onerror = (e) => {
+            alert('ERROR OCCURED, CONNECTION CLOSED!')
+            evtSource.close();
+        }
+        function handleNoticeEvent(e) {
+            console.log(e.data);
+        }
+
+        // Add an event listener for the "notice" event
+        evtSource.addEventListener("notice", handleNoticeEvent);
+    </script>
+</body>
+
+</html>

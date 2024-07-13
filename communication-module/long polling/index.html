@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+</head>
+
+<body>
+    <h1>Long Polling</h1>
+    <div id="container-data"></div>
+</body>
+<script>
+    const containerData = document.getElementById("container-data")
+    async function getData(lastData) {
+        try {
+            const data = await fetch("http://localhost:3001/getData?data=" + lastData);
+            const jsonData = await data.json();
+            console.log(jsonData);
+            containerData.innerHTML = jsonData.data
+            getData(jsonData.data)
+        } catch (err) {
+            console.log(err);
+            console.log("Reestablishing the connection")
+            getData(containerData.innerHTML)
+        }
+    }
+    getData("Initial Data");
+    // NOTE It create a long live connection, where it constantly will be connected with server to check if new 
+    // data is present or not.
+    // It may cause issue with scalability also server should have some capability to handle such functionality
+</script>
+
+</html>

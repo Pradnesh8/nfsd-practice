@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie example</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Cookie example</h1>
+        <div id="select">
+            <h4>Select preference:</h4>
+            <select name="preferences" id="preferences">
+                <option value="music">Music</option>
+                <option value="movies">Movies</option>
+                <option value="books">Books</option>
+            </select>
+            <button onclick="setPreference()">Submit</button>
+        </div>
+        <div id="preference"></div>
+    </div>
+
+</body>
+<script>
+    function fetchPreferences() {
+        const userPreferenceCookie = getCookie('userPreferences');
+        if (userPreferenceCookie) {
+            console.log('User preference:', userPreferenceCookie);
+            const preferenceData = document.getElementById("preference");
+            switch (userPreferenceCookie) {
+                case "music":
+                    preferenceData.innerHTML = 'Get your favourite music'
+                    break;
+                case "movies":
+                    preferenceData.innerHTML = 'Get your favourite movies'
+                    break;
+                case "books":
+                    preferenceData.innerHTML = 'Get your favourite books'
+                    break;
+                default:
+                    preferenceData.innerHTML = ""
+                    break;
+            }
+        }
+    }
+    function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return
+        null;
+    }
+
+    function setPreference() {
+        const preferenceSelected = document.getElementById("preferences")
+        console.log('preference', preferenceSelected.value)
+        console.log("clicked");
+        const val = {
+            preferences: preferenceSelected.value
+        }
+        fetch('/set-preferences', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(val)
+        })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .then(fetchPreferences())
+            .catch(error => console.error('Error:', error));
+    }
+    fetchPreferences();
+</script>
+
+</html>

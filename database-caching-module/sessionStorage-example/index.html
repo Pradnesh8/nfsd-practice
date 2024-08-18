@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sessionStorage example</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>sessionStorage example</h1>
+        <div class="noteAdd">
+            <input type="text" name="note" id="note">
+            <button id="addBtn">Add</button>
+        </div>
+        <ul id="noteList"></ul>
+    </div>
+</body>
+<script>
+    function addNote() {
+        const notes = JSON.parse(sessionStorage.getItem('notes') || '[]');
+        const noteText = document.getElementById('note')
+        notes.push(noteText.value);
+        noteText.value = "";
+        sessionStorage.setItem('notes', JSON.stringify(notes));
+        renderNotes()
+    }
+    function renderNotes() {
+        const notes = JSON.parse(sessionStorage.getItem('notes') || '[]');
+        const noteList = document.getElementById('noteList');
+        noteList.innerHTML = ''
+        notes.forEach((note, index) => {
+            const li = document.createElement('li')
+            li.innerText = note;
+            const btn = document.createElement('button')
+            btn.id = index
+            btn.className = 'removeBtn'
+            btn.innerText = "remove"
+            btn.onclick = () => deleteNote(index)
+            li.appendChild(btn)
+            noteList.appendChild(li);
+        });
+    }
+    function deleteNote(index) {
+        console.log(index);
+        const notes = JSON.parse(sessionStorage.getItem('notes') || '[]');
+        notes.splice(index, 1);
+        sessionStorage.setItem('notes', JSON.stringify(notes));
+        renderNotes()
+
+    }
+    const addNoteBtn = document.getElementById('addBtn');
+    addNoteBtn.addEventListener('click', () => {
+        addNote();
+    })
+    const removeBtn = document.quer
+    renderNotes();
+</script>
+
+</html>

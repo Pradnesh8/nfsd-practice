@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>localStorage example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Toggle Theme</h1>
+        <button id="toggleBtn">change</button>
+    </div>
+</body>
+<script>
+    const container = document.querySelector('.container')
+    const getSelectedTheme = localStorage.getItem('theme');
+    container.classList.add([getSelectedTheme || 'light']);
+    const toggleBtn = document.getElementById('toggleBtn');
+
+    toggleBtn.addEventListener('click', () => {
+        if (container.classList.contains('light')) {
+            container.classList.remove(['light'])
+            container.classList.add(['dark']);
+            localStorage.setItem('theme', 'dark')
+        } else {
+            container.classList.remove(['dark'])
+            container.classList.add(['light']);
+            localStorage.setItem('theme', 'light')
+        }
+    })
+</script>
+
+</html>

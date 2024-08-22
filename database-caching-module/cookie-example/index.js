@@ -8,7 +8,7 @@ app.get("/", (req, res) => {
 })
 
 app.get("/logout", (req, res) => {
-    res.setHeader('Clear-Site-Data', '"cookie","cache","storage"')
+    res.setHeader('Clear-Site-Data', '"cookies", "cache", "storage"')
     res.redirect("/");
 })
 

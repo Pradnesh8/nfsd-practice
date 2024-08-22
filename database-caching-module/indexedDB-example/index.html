@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IndexedDb example</title>
+    <script src="https://unpkg.com/dexie/dist/dexie.js"></script>
+</head>
+
+<body>
+    <h1>IndexedDb example</h1>
+    <div class="container">
+        <input type="text" name="task" id="task" />
+        <button id="addBtn" onclick="addTask()">Add</button>
+    </div>
+    <ul id="todolist"></ul>
+    <script>
+        //  NOTE: Unlike SQL, you don’t need to specify all properties but only the one you wish to index.
+        let db = null;
+        document.addEventListener('DOMContentLoaded', () => {
+            db = new Dexie('todoDB')
+            db.version(1).stores({
+                todos: "++id,task"
+            });
+            fetchTasks()
+        })
+        function addTask() {
+            const taskValue = document.getElementById("task");
+            if (taskValue.value === '') {
+                alert('No task written, Please write task')
+                return;
+            }
+            db.todos.add({
+                task: taskValue.value,
+                // taskId:1 can be added but it wont be indexed
+            }).then(() => {
+                fetchTasks()
+                taskValue.value = ''
+            });
+        }
+        function fetchTasks() {
+            const todolist = document.getElementById('todolist')
+            todolist.innerHTML = ''
+            const tasks = db.todos.toArray().then((res) => {
+                console.log(res);
+                res.forEach(elem => {
+                    const li = document.createElement('li')
+                    li.innerHTML = elem.task
+                    todolist.appendChild(li);
+                });
+            })
+        }
+    </script>
+</body>
+
+</html>
